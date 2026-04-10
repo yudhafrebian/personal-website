@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "next-themes";
+import Header from "@/components/core/Header";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,11 +29,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", figtree.variable)}>
+    <html
+      suppressHydrationWarning
+      lang="en"
+      className={cn("font-sans", figtree.variable)}
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark" // Di sini kuncinya
+          enableSystem={false} // Set false jika ingin mematikan deteksi otomatis sistem
+          disableTransitionOnChange
+        >
+          <Header />
+          <TooltipProvider>{children}</TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
