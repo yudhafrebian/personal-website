@@ -17,11 +17,11 @@ const SkillCard: React.FunctionComponent<ISkillCardProps> = (props) => {
     <div className="grid grid-cols-2 gap-4">
       {skills.map((skill, index) => (
         <BlurFade key={index} inView direction="up" delay={0.25 * (index + 1)}>
-          <Card key={index}>
+          <Card key={index} >
             <CardHeader>
               <CardTitle>{skill.title}</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="min-h-16">
               <div>{skill.description}</div>
             </CardContent>
             <CardFooter>

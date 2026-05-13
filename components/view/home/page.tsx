@@ -6,6 +6,7 @@ import ExperienceSections from "./sections/Experience";
 import SkillSection from "./sections/Skill";
 import TechnologiesSection from "./sections/Technologies";
 import FeaturedProjectsSection from "./sections/Projects";
+import ContactSection from "./sections/Contact";
 
 interface IHomePageViewProps {}
 
@@ -19,6 +20,7 @@ const HomePageView: React.FunctionComponent<IHomePageViewProps> = (props) => {
       <SkillSection />
       <TechnologiesSection />
       <FeaturedProjectsSection />
+      <ContactSection />
     </>
   );
 };

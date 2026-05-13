@@ -1,10 +1,8 @@
 import { projects } from "@/lib/data";
-import * as React from "react";
 import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -17,17 +15,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
 import { BorderBeam } from "../ui/border-beam";
 
-interface IFeaturedProjectCardsProps {}
-
-const FeaturedProjectCards: React.FunctionComponent<
-  IFeaturedProjectCardsProps
-> = (props) => {
+const FeaturedProjectCards = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+    <div className="mt-8 grid grid-cols-[minmax(0,384px)] justify-center gap-6 md:grid-cols-[repeat(2,minmax(320px,384px))] lg:grid-cols-[repeat(3,minmax(320px,384px))] lg:gap-8">
       {projects.map((project, index) => (
         <Card
           key={index}
-          className="relative mx-auto w-full max-w-sm pt-0 group hover:scale-105 transition-transform duration-300 ease-in-out"
+          className="relative w-full pt-0 group hover:scale-105 transition-transform duration-300 ease-in-out"
         >
           <div className="absolute inset-0 z-30 aspect-video bg-black/10" />
           <Image

@@ -1,13 +1,9 @@
 import GlassSurface from "@/components/GlassSurface";
-import ProfileCard from "@/components/ProfileCard";
-import StarBorder from "@/components/StarBorder";
-import TiltedCard from "@/components/TiltedCard";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Button } from "@/components/ui/button";
 import { Highlighter } from "@/components/ui/highlighter";
 import { WordRotate } from "@/components/ui/word-rotate";
 import { Download, Facebook, Github, Instagram, Linkedin, Mail, MessageCircle, Phone, Twitter } from "lucide-react";
-import { div } from "motion/react-client";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
@@ -17,7 +13,7 @@ interface IAboutProps {}
 const AboutSections: React.FunctionComponent<IAboutProps> = (props) => {
   return (
     <section
-      className="flex justify-between items-center py-20 px-36 h-screen"
+      className="flex justify-between items-center py-10 px-4 md:py-20 md:px-36 2xl:px-64 2xl:py-20 h-screen"
       id="about"
     >
       <BlurFade inView direction="right" className="w-2/3 flex flex-col gap-6">

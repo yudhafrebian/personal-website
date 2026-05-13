@@ -8,8 +8,8 @@ const ExperienceSections: React.FunctionComponent<IExperienceSectionsProps> = (
   props,
 ) => {
   return (
-    <section className="px-36 py-20 h-screen" id="experience">
-      <div className="flex flex-col justify-between h-full">
+    <section className="py-10 px-4 md:py-20 md:px-36 2xl:px-64 2xl:py-20 h-screen" id="experience">
+      <div className="flex flex-col justify-center gap-10 h-full">
         <BlurFade inView direction="right" className="flex flex-col gap-2">
           <h2 className="text-5xl font-semibold">
             Work <Highlighter action="underline">Experience</Highlighter>
