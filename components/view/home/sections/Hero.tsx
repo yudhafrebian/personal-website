@@ -25,14 +25,18 @@ const HeroSections = () => {
         <div className="w-full max-w-4xl">
           <BlurFade inView delay={0.25} direction="up">
             <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              Building digital experiences that matter
+              Ananda Yudha Frebiansyah, Fullstack Developer
             </h1>
-            {/* <p className="text-sm">A software engineer passionate about building seamless user interfaces and scalable web applications.</p> */}
+            <p className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
+              Building scalable web applications, responsive interfaces, and
+              efficient digital products with Next.js, React, TypeScript, and
+              Node.js.
+            </p>
           </BlurFade>
         </div>
         <BlurFade inView delay={0.25 * 2} direction="up">
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:gap-4">
-            <Link href={"#"}>
+          <div className="mt-4 flex  gap-3  sm:gap-4">
+            <Link href={"#contact"}>
               <Button size={"xl"} className="w-full px-10 sm:w-auto">
                 Get Started
               </Button>
