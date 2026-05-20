@@ -1,6 +1,11 @@
-export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-  "http://localhost:3000";
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+
+export const siteUrl = rawSiteUrl
+  ? (rawSiteUrl.startsWith("http://") || rawSiteUrl.startsWith("https://")
+      ? rawSiteUrl
+      : `https://${rawSiteUrl}`
+    ).replace(/\/$/, "")
+  : "http://localhost:3000";
 
 export const siteConfig = {
   name: "Ananda Yudha Frebiansyah",
