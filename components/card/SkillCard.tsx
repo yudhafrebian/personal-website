@@ -10,11 +10,9 @@ import { skills } from "@/lib/data";
 import { Badge } from "../ui/badge";
 import { BlurFade } from "../ui/blur-fade";
 
-interface ISkillCardProps {}
-
-const SkillCard: React.FunctionComponent<ISkillCardProps> = (props) => {
+const SkillCard: React.FunctionComponent = () => {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {skills.map((skill, index) => (
         <BlurFade key={index} inView direction="up" delay={0.25 * (index + 1)}>
           <Card key={index} >

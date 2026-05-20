@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
-// @ts-ignore: global CSS import type declarations
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import Header from "@/components/core/Header";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import Footer from "@/components/core/Footer";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -41,13 +41,14 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark" // Di sini kuncinya
-          enableSystem={false} // Set false jika ingin mematikan deteksi otomatis sistem
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <Header />
           <Toaster />
           <TooltipProvider>{children}</TooltipProvider>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

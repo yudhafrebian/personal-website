@@ -29,7 +29,7 @@ const FeaturedProjectCards = () => {
             alt={project.title}
             width={400}
             height={300}
-            className="aspect-video w-full "
+            className="aspect-video w-full object-cover"
           />
 
           <CardHeader>

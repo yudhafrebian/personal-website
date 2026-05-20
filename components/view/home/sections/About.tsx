@@ -3,26 +3,24 @@ import { BlurFade } from "@/components/ui/blur-fade";
 import { Button } from "@/components/ui/button";
 import { Highlighter } from "@/components/ui/highlighter";
 import { WordRotate } from "@/components/ui/word-rotate";
-import { Download, Facebook, Github, Instagram, Linkedin, Mail, MessageCircle, Phone, Twitter } from "lucide-react";
+import { Download, Github, Instagram, Linkedin, Mail, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
-interface IAboutProps {}
-
-const AboutSections: React.FunctionComponent<IAboutProps> = (props) => {
+const AboutSections: React.FunctionComponent = () => {
   return (
     <section
-      className="flex justify-between items-center py-10 px-4 md:py-20 md:px-36 2xl:px-64 2xl:py-20 h-screen"
+      className="flex min-h-screen flex-col-reverse items-center justify-center gap-10 px-4 py-20 sm:px-6 md:px-16 lg:flex-row lg:justify-between lg:px-36 2xl:px-64"
       id="about"
     >
-      <BlurFade inView direction="right" className="w-2/3 flex flex-col gap-6">
+      <BlurFade inView direction="right" className="flex w-full max-w-3xl flex-col gap-6 lg:w-2/3">
         <div>
-          <h2 className="text-5xl font-semibold">
-            <Highlighter action="underline">Hi, I'm</Highlighter>
+          <h2 className="text-3xl font-semibold sm:text-4xl lg:text-5xl">
+            <Highlighter action="underline">Hi, I&apos;m</Highlighter>
           </h2>
           <WordRotate
-            className="text-5xl font-bold"
+            className="text-3xl font-bold sm:text-4xl lg:text-5xl"
             words={[
               "Ananda Yudha Frebiansyah",
               "A Fullstack Developer",
@@ -30,7 +28,7 @@ const AboutSections: React.FunctionComponent<IAboutProps> = (props) => {
             ]}
           />
         </div>
-        <div className="w-3/4">
+        <div className="w-full text-muted-foreground lg:w-3/4">
           <p>
             a Junior Fullstack Developer with over a year of experience in
             building scalable and efficient web applications. I specialize in
@@ -40,12 +38,12 @@ const AboutSections: React.FunctionComponent<IAboutProps> = (props) => {
             and PostgreSQL.
           </p>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           <Button size={"lg"}>
             <Download /> Download CV
           </Button>
           <Button size={"lg"} variant={"outline"}>
-            <MessageCircle /> Let's Talk
+            <MessageCircle /> Let&apos;s Talk
           </Button>
         </div>
         <div className="flex gap-4">
@@ -73,8 +71,8 @@ const AboutSections: React.FunctionComponent<IAboutProps> = (props) => {
       </BlurFade>
       <BlurFade inView direction="left">
         <GlassSurface
-          width={400}
-          height={400}
+          width={"min(78vw, 400px)"}
+          height={"min(78vw, 400px)"}
           borderRadius={999} // Membuat GlassSurface menjadi lingkaran sempurna
           className="my-custom-class overflow-hidden" // PENTING: agar gambar tidak keluar jalur
         >

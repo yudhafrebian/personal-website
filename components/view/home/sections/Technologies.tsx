@@ -4,11 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
-interface ITechnologiesSectionProps {}
-
-const TechnologiesSection: React.FunctionComponent<
-  ITechnologiesSectionProps
-> = (props) => {
+const TechnologiesSection: React.FunctionComponent = () => {
   return (
     <section className="bg-secondary py-6">
       <Marquee repeat={6} pauseOnHover>

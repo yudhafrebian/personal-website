@@ -17,9 +17,9 @@ const ExperienceCard = () => {
           <Card>
             <CardHeader>
               <CardTitle>
-                <div className="flex justify-between w-full">
+                <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>{item.title}</div>
-                  <Badge>{item.date}</Badge>
+                  <Badge className="w-fit">{item.date}</Badge>
                 </div>
               </CardTitle>
               <CardDescription>

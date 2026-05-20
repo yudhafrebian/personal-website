@@ -8,9 +8,7 @@ import TechnologiesSection from "./sections/Technologies";
 import FeaturedProjectsSection from "./sections/Projects";
 import ContactSection from "./sections/Contact";
 
-interface IHomePageViewProps {}
-
-const HomePageView: React.FunctionComponent<IHomePageViewProps> = (props) => {
+const HomePageView: React.FunctionComponent = () => {
   return (
     <>
       <HeroSections />
