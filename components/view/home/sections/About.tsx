@@ -56,30 +56,50 @@ const AboutSections: React.FunctionComponent = () => {
           <Button size={"lg"} onClick={handleDownloadCv}>
             <Download /> Download CV
           </Button>
-          <Link href={"#contact"}>
+          <Link href={"#contact"} aria-label="Jump to contact section">
           <Button size={"lg"} variant={"outline"}>
             <MessageCircle /> Let&apos;s Talk
           </Button>
           </Link>
         </div>
         <div className="flex gap-4">
-          <Link href={"https://github.com/yudhafrebian"}>
-          <Button size={"icon-lg"} variant={"secondary"} className="hover:scale-110">
+          <Link href={"https://github.com/yudhafrebian"} aria-label="Open GitHub profile">
+          <Button
+            size={"icon-lg"}
+            variant={"secondary"}
+            className="hover:scale-110"
+            aria-label="Open GitHub profile"
+          >
               <Github />
           </Button>
           </Link>
-          <Link href={"https://www.linkedin.com/in/ananda-yudha-382533190/"}>
-          <Button size={"icon-lg"} variant={"secondary"} className="hover:scale-110">
+          <Link href={"https://www.linkedin.com/in/ananda-yudha-382533190/"} aria-label="Open LinkedIn profile">
+          <Button
+            size={"icon-lg"}
+            variant={"secondary"}
+            className="hover:scale-110"
+            aria-label="Open LinkedIn profile"
+          >
               <Linkedin />
           </Button>
           </Link>
-          <Link href={"https://www.instagram.com/yudha_frebian/"}>
-          <Button size={"icon-lg"} variant={"secondary"} className="hover:scale-110">
+          <Link href={"https://www.instagram.com/yudha_frebian/"} aria-label="Open Instagram profile">
+          <Button
+            size={"icon-lg"}
+            variant={"secondary"}
+            className="hover:scale-110"
+            aria-label="Open Instagram profile"
+          >
               <Instagram />
           </Button>
           </Link>
-          <Link href="https://mail.google.com/mail/?view=cm&fs=1&to=anandayudha777@gmail.com">
-          <Button size={"icon-lg"} variant={"secondary"} className="hover:scale-110">
+          <Link href="https://mail.google.com/mail/?view=cm&fs=1&to=anandayudha777@gmail.com" aria-label="Send email">
+          <Button
+            size={"icon-lg"}
+            variant={"secondary"}
+            className="hover:scale-110"
+            aria-label="Send email"
+          >
               <Mail />
           </Button>
           </Link>

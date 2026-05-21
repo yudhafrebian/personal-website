@@ -15,7 +15,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
 import { BorderBeam } from "../ui/border-beam";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 const FeaturedProjectCards = () => {
   return (
@@ -54,12 +53,22 @@ const FeaturedProjectCards = () => {
                           href={project.live ? project.live : "#"}
                           target="_blank"
                           rel="noopener noreferrer"
+                          aria-label={
+                            project.live
+                              ? `Open ${project.title} live project`
+                              : `${project.title} project is private`
+                          }
                         >
                           <Button
                             variant={"outline"}
                             size={"icon-sm"}
                             disabled={!project.live}
                             className="hover:scale-110 transition-all duration-200 ease-in-out"
+                            aria-label={
+                              project.live
+                                ? `View ${project.title} live project`
+                                : `${project.title} project is private`
+                            }
                           >
                             <ExternalLink />
                           </Button>
@@ -69,6 +78,7 @@ const FeaturedProjectCards = () => {
                           variant={"outline"}
                           size={"icon-sm"}
                           disabled={!project.live}
+                          aria-label={`${project.title} project is private`}
                         >
                           <ExternalLink />
                         </Button>
@@ -91,12 +101,22 @@ const FeaturedProjectCards = () => {
                           href={project.github ? project.github : "#"}
                           target="_blank"
                           rel="noopener noreferrer"
+                          aria-label={
+                            project.github
+                              ? `Open ${project.title} source code`
+                              : `${project.title} source code not available`
+                          }
                         >
                           <Button
                             variant={"outline"}
                             size={"icon-sm"}
                             disabled={!project.github}
                             className="hover:scale-110 transition-all duration-200 ease-in-out"
+                            aria-label={
+                              project.github
+                                ? `View ${project.title} source code`
+                                : `${project.title} source code not available`
+                            }
                           >
                             <Github />
                           </Button>
@@ -106,6 +126,7 @@ const FeaturedProjectCards = () => {
                           variant={"outline"}
                           size={"icon-sm"}
                           disabled={!project.github}
+                          aria-label={`${project.title} source code not available`}
                         >
                           <Github />
                         </Button>
@@ -177,28 +198,39 @@ const FeaturedProjectCards = () => {
                       <TooltipTrigger asChild>
                         <span className="inline-block w-fit">
                           {project.live ? (
-                            <Link
-                              href={project.live ? project.live : "#"}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Button
-                                variant={"outline"}
-                                size={"icon-sm"}
-                                disabled={!project.live}
-                                className="hover:scale-110 transition-all duration-200 ease-in-out"
-                              >
-                                <ExternalLink />
-                              </Button>
-                            </Link>
-                          ) : (
-                            <Button
-                              variant={"outline"}
-                              size={"icon-sm"}
-                              disabled={!project.live}
-                            >
-                              <ExternalLink />
-                            </Button>
+                        <Link
+                          href={project.live ? project.live : "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={
+                            project.live
+                              ? `Open ${project.title} live project`
+                              : `${project.title} project is private`
+                          }
+                        >
+                          <Button
+                            variant={"outline"}
+                            size={"icon-sm"}
+                            disabled={!project.live}
+                            className="hover:scale-110 transition-all duration-200 ease-in-out"
+                            aria-label={
+                              project.live
+                                ? `View ${project.title} live project`
+                                : `${project.title} project is private`
+                            }
+                          >
+                            <ExternalLink />
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button
+                          variant={"outline"}
+                          size={"icon-sm"}
+                          disabled={!project.live}
+                          aria-label={`${project.title} project is private`}
+                        >
+                          <ExternalLink />
+                        </Button>
                           )}
                         </span>
                       </TooltipTrigger>
@@ -214,28 +246,39 @@ const FeaturedProjectCards = () => {
                       <TooltipTrigger asChild>
                         <span className="inline-block w-fit">
                           {project.github ? (
-                            <Link
-                              href={project.github ? project.github : "#"}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Button
-                                variant={"outline"}
-                                size={"icon-sm"}
-                                disabled={!project.github}
-                                className="hover:scale-110 transition-all duration-200 ease-in-out"
-                              >
-                                <Github />
-                              </Button>
-                            </Link>
-                          ) : (
-                            <Button
-                              variant={"outline"}
-                              size={"icon-sm"}
-                              disabled={!project.github}
-                            >
-                              <Github />
-                            </Button>
+                        <Link
+                          href={project.github ? project.github : "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={
+                            project.github
+                              ? `Open ${project.title} source code`
+                              : `${project.title} source code not available`
+                          }
+                        >
+                          <Button
+                            variant={"outline"}
+                            size={"icon-sm"}
+                            disabled={!project.github}
+                            className="hover:scale-110 transition-all duration-200 ease-in-out"
+                            aria-label={
+                              project.github
+                                ? `View ${project.title} source code`
+                                : `${project.title} source code not available`
+                            }
+                          >
+                            <Github />
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button
+                          variant={"outline"}
+                          size={"icon-sm"}
+                          disabled={!project.github}
+                          aria-label={`${project.title} source code not available`}
+                        >
+                          <Github />
+                        </Button>
                           )}
                         </span>
                       </TooltipTrigger>

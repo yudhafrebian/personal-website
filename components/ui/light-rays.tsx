@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, type CSSProperties } from "react"
+import { useEffect, useMemo, useState, type CSSProperties } from "react"
 import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
@@ -50,6 +50,36 @@ const createRays = (count: number, cycle: number): LightRay[] => {
   })
 }
 
+const useIdleReady = () => {
+  const [isReady, setIsReady] = useState(false)
+
+  useEffect(() => {
+    const onReady = () => setIsReady(true)
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (
+        callback: IdleRequestCallback,
+        options?: IdleRequestOptions,
+      ) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    }
+
+    if (typeof window === "undefined") {
+      onReady()
+      return
+    }
+
+    if (idleWindow.requestIdleCallback) {
+      const id = idleWindow.requestIdleCallback(onReady, { timeout: 1200 })
+      return () => idleWindow.cancelIdleCallback?.(id)
+    }
+
+    const timeoutId = window.setTimeout(onReady, 200)
+    return () => window.clearTimeout(timeoutId)
+  }, [])
+
+  return isReady
+}
+
 const Ray = ({
   left,
   rotate,
@@ -95,12 +125,12 @@ export function LightRays({
   ref,
   ...props
 }: LightRaysProps) {
-  const [rays, setRays] = useState<LightRay[]>([])
+  const isReady = useIdleReady()
   const cycleDuration = Math.max(speed, 0.1)
-
-  useEffect(() => {
-    setRays(createRays(count, cycleDuration))
-  }, [count, cycleDuration])
+  const rays = useMemo(
+    () => (isReady ? createRays(count, cycleDuration) : []),
+    [count, cycleDuration, isReady]
+  )
 
   return (
     <div
@@ -119,6 +149,18 @@ export function LightRays({
       }
       {...props}
     >
+      {!isReady ? (
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-70"
+          style={
+            {
+              background:
+                "radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--light-rays-color) 35%, transparent), transparent 62%)",
+            } as CSSProperties
+          }
+        />
+      ) : null}
       <div className="absolute inset-0 overflow-hidden">
         <div
           aria-hidden

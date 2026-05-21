@@ -1,5 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState, useId } from "react";
+import React, {
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+  useId,
+  useSyncExternalStore,
+} from "react";
 
 export interface GlassSurfaceProps {
   children?: React.ReactNode;
@@ -43,21 +50,45 @@ export interface GlassSurfaceProps {
 }
 
 const useDarkMode = () => {
-  const [isDark, setIsDark] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  return useSyncExternalStore(
+    (callback) => {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      mediaQuery.addEventListener("change", callback);
+      return () => mediaQuery.removeEventListener("change", callback);
+    },
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
+    () => false,
+  );
+};
+
+const useIdleReady = () => {
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(mediaQuery.matches);
+    const onReady = () => setIsReady(true);
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (
+        callback: IdleRequestCallback,
+        options?: IdleRequestOptions,
+      ) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
 
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
+    if (typeof window === "undefined") {
+      onReady();
+      return;
+    }
+
+    if (idleWindow.requestIdleCallback) {
+      const id = idleWindow.requestIdleCallback(onReady, { timeout: 1200 });
+      return () => idleWindow.cancelIdleCallback?.(id);
+    }
+
+    const timeoutId = window.setTimeout(onReady, 250);
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
-  // Kembalikan status mounted agar komponen tahu kapan bisa memakai state browser
-  return { isDark, isMounted };
+  return isReady;
 };
 
 const GlassSurface: React.FC<GlassSurfaceProps> = ({
@@ -87,18 +118,38 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const redGradId = `red-grad-${uniqueId}`;
   const blueGradId = `blue-grad-${uniqueId}`;
 
-  const [svgSupported, setSvgSupported] = useState<boolean>(false);
-  const { isDark, isMounted } = useDarkMode();
   const containerRef = useRef<HTMLDivElement>(null);
   const feImageRef = useRef<SVGFEImageElement>(null);
   const redChannelRef = useRef<SVGFEDisplacementMapElement>(null);
   const greenChannelRef = useRef<SVGFEDisplacementMapElement>(null);
   const blueChannelRef = useRef<SVGFEDisplacementMapElement>(null);
   const gaussianBlurRef = useRef<SVGFEGaussianBlurElement>(null);
+  const isReady = useIdleReady();
 
-  const isDarkMode = isMounted ? isDark : false;
+  const isDarkMode = useDarkMode();
 
-  const generateDisplacementMap = () => {
+  function supportsSVGFilters() {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return false;
+    }
+
+    const isWebkit =
+      /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+    const isFirefox = /Firefox/.test(navigator.userAgent);
+
+    if (isWebkit || isFirefox) {
+      return false;
+    }
+
+    const div = document.createElement("div");
+    div.style.backdropFilter = `url(#${filterId})`;
+
+    return div.style.backdropFilter !== "";
+  }
+
+  const svgSupported = isReady ? supportsSVGFilters() : false;
+
+  const generateDisplacementMap = useCallback(() => {
     const rect = containerRef.current?.getBoundingClientRect();
     const actualWidth = rect?.width || 400;
     const actualHeight = rect?.height || 200;
@@ -124,13 +175,20 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     `;
 
     return `data:image/svg+xml,${encodeURIComponent(svgContent)}`;
-  };
+  }, [borderWidth, borderRadius, brightness, opacity, blur, mixBlendMode, redGradId, blueGradId]);
 
-  const updateDisplacementMap = () => {
+  const updateDisplacementMap = useCallback(() => {
     feImageRef.current?.setAttribute("href", generateDisplacementMap());
+  }, [generateDisplacementMap]);
+
+  const supportsBackdropFilter = () => {
+    if (typeof window === "undefined") return false;
+    return CSS.supports("backdrop-filter", "blur(10px)");
   };
 
   useEffect(() => {
+    if (!isReady) return;
+
     updateDisplacementMap();
     [
       { ref: redChannelRef, offset: redOffset },
@@ -164,13 +222,12 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     xChannel,
     yChannel,
     mixBlendMode,
+    isReady,
   ]);
 
   useEffect(() => {
-    setSvgSupported(supportsSVGFilters());
-  }, []);
+    if (!isReady) return;
 
-  useEffect(() => {
     if (!containerRef.current) return;
 
     const resizeObserver = new ResizeObserver(() => {
@@ -182,49 +239,13 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [isReady]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!isReady) return;
 
-    const resizeObserver = new ResizeObserver(() => {
-      setTimeout(updateDisplacementMap, 0);
-    });
-
-    resizeObserver.observe(containerRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
     setTimeout(updateDisplacementMap, 0);
-  }, [width, height]);
-
-  const supportsSVGFilters = () => {
-    if (typeof window === "undefined" || typeof document === "undefined") {
-      return false;
-    }
-
-    const isWebkit =
-      /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-    const isFirefox = /Firefox/.test(navigator.userAgent);
-
-    if (isWebkit || isFirefox) {
-      return false;
-    }
-
-    const div = document.createElement("div");
-    div.style.backdropFilter = `url(#${filterId})`;
-
-    return div.style.backdropFilter !== "";
-  };
-
-  const supportsBackdropFilter = () => {
-    if (typeof window === "undefined") return false;
-    return CSS.supports("backdrop-filter", "blur(10px)");
-  };
+  }, [isReady, width, height]);
 
   const getContainerStyles = (): React.CSSProperties => {
     const baseStyles: React.CSSProperties = {
@@ -317,8 +338,24 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     ? "focus-visible:outline-2 focus-visible:outline-[#0A84FF] focus-visible:outline-offset-2"
     : "focus-visible:outline-2 focus-visible:outline-[#007AFF] focus-visible:outline-offset-2";
 
-  if (!isMounted) {
-    return <div style={{ width, height }} className={className} />;
+  if (!isReady) {
+    return (
+      <div
+        style={{
+          width: typeof width === "number" ? `${width}px` : width,
+          height: typeof height === "number" ? `${height}px` : height,
+          borderRadius: `${borderRadius}px`,
+          background: isDarkMode
+            ? "rgba(255, 255, 255, 0.08)"
+            : "rgba(255, 255, 255, 0.25)",
+          border: isDarkMode
+            ? "1px solid rgba(255, 255, 255, 0.12)"
+            : "1px solid rgba(255, 255, 255, 0.22)",
+          ...style,
+        }}
+        className={className}
+      />
+    );
   }
 
   return (

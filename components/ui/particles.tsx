@@ -14,13 +14,15 @@ interface MousePosition {
   y: number
 }
 
-function MousePosition(): MousePosition {
+function MousePosition(enabled: boolean): MousePosition {
   const [mousePosition, setMousePosition] = useState<MousePosition>({
     x: 0,
     y: 0,
   })
 
   useEffect(() => {
+    if (!enabled) return
+
     const handleMouseMove = (event: MouseEvent) => {
       setMousePosition({ x: event.clientX, y: event.clientY })
     }
@@ -30,7 +32,7 @@ function MousePosition(): MousePosition {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
     }
-  }, [])
+  }, [enabled])
 
   return mousePosition
 }
@@ -93,7 +95,8 @@ export const Particles: React.FC<ParticlesProps> = ({
   const canvasContainerRef = useRef<HTMLDivElement>(null)
   const context = useRef<CanvasRenderingContext2D | null>(null)
   const circles = useRef<Circle[]>([])
-  const mousePosition = MousePosition()
+  const [isVisible, setIsVisible] = useState(false)
+  const mousePosition = MousePosition(isVisible)
   const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
   const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 })
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1
@@ -104,6 +107,25 @@ export const Particles: React.FC<ParticlesProps> = ({
   const animateRef = useRef<() => void>(() => {})
 
   useEffect(() => {
+    if (!canvasContainerRef.current) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.15 }
+    )
+
+    observer.observe(canvasContainerRef.current)
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!isVisible) return
+
     if (canvasRef.current) {
       context.current = canvasRef.current.getContext("2d")
     }
@@ -130,15 +152,19 @@ export const Particles: React.FC<ParticlesProps> = ({
       }
       window.removeEventListener("resize", handleResize)
     }
-  }, [color])
+  }, [color, isVisible])
 
   useEffect(() => {
+    if (!isVisible) return
+
     onMouseMoveRef.current()
-  }, [mousePosition.x, mousePosition.y])
+  }, [mousePosition.x, mousePosition.y, isVisible])
 
   useEffect(() => {
+    if (!isVisible) return
+
     initCanvasRef.current()
-  }, [refresh])
+  }, [refresh, isVisible])
 
   const initCanvas = () => {
     resizeCanvas()
@@ -315,6 +341,7 @@ export const Particles: React.FC<ParticlesProps> = ({
       aria-hidden="true"
       {...props}
     >
+      {!isVisible ? <div className="size-full" /> : null}
       <canvas ref={canvasRef} className="size-full" />
     </div>
   )

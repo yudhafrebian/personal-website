@@ -63,9 +63,8 @@ const ContactSection = () => {
               </span>
               <Particles
                 className="absolute inset-0 z-0"
-                quantity={100}
+                quantity={40}
                 ease={80}
-                refresh
               />
             </div>
           </div>
